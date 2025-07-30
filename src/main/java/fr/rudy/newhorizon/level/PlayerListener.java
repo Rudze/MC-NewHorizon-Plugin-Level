@@ -43,10 +43,18 @@ public class PlayerListener implements Listener {
             ) continue;
             keys.remove(name);
 
-            for (String metadata : keys)
-                if (!event.getBlock().getBlockData().getAsString().toLowerCase().contains((metadata + "=" + block.get(metadata)).toLowerCase()))
-                    continue;
-            levelsManager.setExp(event.getPlayer().getUniqueId(), levelsManager.getExp(event.getPlayer().getUniqueId()) + block.get(name));
+            boolean metadataMatch = true;
+            for (String metadata : keys) {
+                if (!event.getBlock().getBlockData().getAsString().toLowerCase().contains((metadata + "=" + block.get(metadata)).toLowerCase())) {
+                    metadataMatch = false;
+                    break;
+                }
+            }
+            
+            if (metadataMatch) {
+                levelsManager.setExp(event.getPlayer().getUniqueId(), levelsManager.getExp(event.getPlayer().getUniqueId()) + block.get(name));
+                break; // Exit the loop once we've found a matching block and awarded experience
+            }
         }
     }
 

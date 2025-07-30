@@ -11,39 +11,37 @@ levels:
   break_blocks:
     - "*_LOG": 1
     #Mineraits
-    - "COAL_ORE": 1
-    - "DEEPSLATE_COAL_ORE": 1
-    - "IRON_ORE": 3
-    - "DEEPSLATE_IRON_ORE": 3
-    - "COPPER_ORE": 1
-    - "DEEPSLATE_COPPER_ORE": 1
-    - "GOLD_ORE": 7
-    - "DEEPSLATE_GOLD_ORE": 7
-    - "REDSTONE_ORE": 2
-    - "DEEPSLATE_REDSTONE_ORE": 2
-    - "EMERALD_ORE": 15
-    - "DEEPSLATE_EMERALD_ORE": 10
-    - "LAPIS_ORE": 3
-    - "DEEPSLATE_LAPIS_ORE": 3
-    - "DIAMOND_ORE": 30
-    - "DEEPSLATE_DIAMOND_ORE": 20
-    - "NETHER_GOLD_ORE": 2
-    - "NETHER_QUARTZ_ORE": 1
-    - "ANCIENT_DEBRIS": 40
-    - "LAPIS_ORE": 2
-    - "DEEPSLATE_LAPIS_ORE": 2
+    - "COAL_ORE": 0
+    - "DEEPSLATE_COAL_ORE": 0
+    - "IRON_ORE": 0
+    - "DEEPSLATE_IRON_ORE": 0
+    - "COPPER_ORE": 0
+    - "DEEPSLATE_COPPER_ORE": 0
+    - "GOLD_ORE": 0
+    - "DEEPSLATE_GOLD_ORE": 0
+    - "REDSTONE_ORE": 0
+    - "DEEPSLATE_REDSTONE_ORE": 0
+    - "EMERALD_ORE": 0
+    - "DEEPSLATE_EMERALD_ORE": 0
+    - "LAPIS_ORE": 0
+    - "DEEPSLATE_LAPIS_ORE": 0
+    - "DIAMOND_ORE": 0
+    - "DEEPSLATE_DIAMOND_ORE": 0
+    - "NETHER_GOLD_ORE": 0
+    - "NETHER_QUARTZ_ORE": 0
+    - "ANCIENT_DEBRIS": 0
     #Agricultures
-    - "WHEAT": 2
-      age: 7
-    - "CARROTS": 2
-      age: 7
-    - "POTATOES": 2
-      age: 7
-    - "BEETROOTS": 2
-      age: 3
-    - "PUMPKIN": 2
-    - "MELON": 2
-    - "SUGAR_CANE": 1
+    - "WHEAT": 0
+      "age": 7
+    - "CARROTS": 0
+      "age": 7
+    - "POTATOES": 0
+      "age": 7
+    - "BEETROOTS": 0
+      "age": 3
+    - "PUMPKIN": 0
+    - "MELON": 0
+    - "SUGAR_CANE": 0
 
   # Expérience pour tuer des mobs
   mob_kill_exp:
