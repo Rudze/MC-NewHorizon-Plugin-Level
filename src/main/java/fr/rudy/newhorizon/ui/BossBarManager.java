@@ -10,6 +10,7 @@ package fr.rudy.newhorizon.ui;
 // import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.rudy.newhorizon.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -93,7 +94,7 @@ public class BossBarManager implements Listener {
                         .replace("{territory}", territory)
                         .replace("{time}", time);
                     
-                    bar.setTitle(title);
+                    bar.setTitle(ChatColor.translateAlternateColorCodes('&', title));
                 }
             }
         }.runTaskTimer(plugin, 0L, updateInterval);

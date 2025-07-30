@@ -33,7 +33,7 @@ public class StatsCommand implements CommandExecutor {
             return true;
         }
         
-        // /stats reset - Reset own stats (if player has permission)
+
         if (args.length == 1 && args[0].equalsIgnoreCase("reset")) {
             if (!player.hasPermission("level.stats.reset")) {
                 player.sendMessage(Main.get().getPrefixError() + "Vous n'avez pas la permission de réinitialiser vos statistiques.");

@@ -75,8 +75,7 @@ public class LevelCommand implements CommandExecutor {
                 int expToAdd = Integer.parseInt(args[2]);
                 levelsManager.addExp(target.getUniqueId(), expToAdd);
 
-                // MessageUtil.sendMessage(sender, Main.get().getPrefixInfo(), "Vous avez donné " + expToAdd + " d'expérience à " + target.getName() + ".");
-                // MessageUtil.sendMessage(target, Main.get().getPrefixInfo(), "Vous avez reçu " + expToAdd + " d'expérience !");
+
             } catch (NumberFormatException exception) {
                 MessageUtil.sendMessage(sender, Main.get().getPrefixError(), "Veuillez entrer un nombre valide.");
             }
