@@ -30,6 +30,11 @@ public class LevelsManager {
             return expCache.get(player);
         }
 
+        if (database == null) {
+            // Database not available, return 0 experience
+            return 0;
+        }
+
         try (PreparedStatement statement = database.prepareStatement(
                 "SELECT experience FROM newhorizon_player_data WHERE uuid = ?;")) {
 
@@ -51,6 +56,12 @@ public class LevelsManager {
     }
 
     public boolean setExp(UUID player, int exp) {
+        if (database == null) {
+            // Database not available, only update cache
+            expCache.put(player, exp);
+            return false;
+        }
+
         try (PreparedStatement statement = database.prepareStatement(
                 "INSERT INTO newhorizon_player_data (uuid, experience) " +
                         "VALUES (?, ?) " +

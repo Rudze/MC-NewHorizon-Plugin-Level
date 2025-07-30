@@ -5,8 +5,8 @@ api-version: '1.21'
 prefix: LEVEL
 authors: [Rudy, Shirito]
 
-depend: [ProtocolLib, DatabaseAPI]
-softdepend: ["PlaceholderAPI"]
+depend: [ProtocolLib]
+softdepend: ["PlaceholderAPI", "DatabaseAPI"]
 
 loadbefore:
   - ShopkeepersAddon

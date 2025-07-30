@@ -62,16 +62,16 @@ public final class Main extends JavaPlugin implements Listener {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+                getLogger().info("✅ DatabaseAPI connecté avec succès !");
             } catch (Exception e) {
-                getLogger().severe("❌ Erreur lors de l'accès à DatabaseAPI: " + e.getMessage());
-                Bukkit.getPluginManager().disablePlugin(this);
-                return;
+                getLogger().warning("⚠️ Erreur lors de l'accès à DatabaseAPI: " + e.getMessage());
+                getLogger().warning("⚠️ Le plugin continuera sans base de données.");
+                database = null;
             }
 
         } else {
-            getLogger().severe("❌ DatabaseAPI introuvable !");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
+            getLogger().warning("⚠️ DatabaseAPI introuvable ! Le plugin continuera sans base de données.");
+            database = null;
         }
 
         setupManagers();

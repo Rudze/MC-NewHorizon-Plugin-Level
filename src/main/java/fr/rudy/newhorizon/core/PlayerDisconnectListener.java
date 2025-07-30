@@ -25,6 +25,10 @@ public class PlayerDisconnectListener implements Listener {
         Player p = e.getPlayer();
         try {
             Connection conn = fr.rudy.newhorizon.Main.get().getDatabase();
+            if (conn == null) {
+                // Database not available, skip saving player data
+                return;
+            }
             PreparedStatement ps = conn.prepareStatement(
                     "UPDATE newhorizon_player_data SET " +
                             "worn_helmet_data=?, worn_chestplate_data=?, worn_leggings_data=?, worn_boots_data=?," +
