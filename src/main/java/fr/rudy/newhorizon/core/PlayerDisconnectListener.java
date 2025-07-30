@@ -1,16 +1,13 @@
-// PlayerDisconnectListener.java
+
 package fr.rudy.newhorizon.core;
 
-import com.hibiscusmc.hmccosmetics.api.HMCCosmeticsAPI;
-import com.hibiscusmc.hmccosmetics.user.CosmeticUser;
-import com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
 
@@ -41,11 +38,26 @@ public class PlayerDisconnectListener implements Listener {
             ps.setString(3, serialize(p.getInventory().getLeggings()));
             ps.setString(4, serialize(p.getInventory().getBoots()));
 
-            CosmeticUser user = HMCCosmeticsAPI.getUser(p.getUniqueId());
-            ps.setString(5, (user.getCosmetic(CosmeticSlot.HELMET) != null ? user.getCosmetic(CosmeticSlot.HELMET).getId() : null));
-            ps.setString(6, (user.getCosmetic(CosmeticSlot.BACKPACK) != null ? user.getCosmetic(CosmeticSlot.BACKPACK).getId() : null));
-            ps.setString(7, (user.getCosmetic(CosmeticSlot.OFFHAND) != null ? user.getCosmetic(CosmeticSlot.OFFHAND).getId() : null));
-            ps.setString(8, (user.getCosmetic(CosmeticSlot.BALLOON) != null ? user.getCosmetic(CosmeticSlot.BALLOON).getId() : null));
+            // HMCCosmetics integration - disabled due to Java version compatibility
+            // Check if HMCCosmetics plugin is available at runtime
+            String helmetId = null, backpackId = null, offhandId = null, balloonId = null;
+            
+            if (Bukkit.getPluginManager().getPlugin("HMCCosmetics") != null) {
+                try {
+                    // Use reflection to access HMCCosmetics API safely
+                    helmetId = getCosmeticId(p, "HELMET");
+                    backpackId = getCosmeticId(p, "BACKPACK");
+                    offhandId = getCosmeticId(p, "OFFHAND");
+                    balloonId = getCosmeticId(p, "BALLOON");
+                } catch (Exception ex2) {
+                    Bukkit.getLogger().warning("Failed to access HMCCosmetics API: " + ex2.getMessage());
+                }
+            }
+            
+            ps.setString(5, helmetId);
+            ps.setString(6, backpackId);
+            ps.setString(7, offhandId);
+            ps.setString(8, balloonId);
 
             ps.setString(9, p.getUniqueId().toString());
             ps.executeUpdate();
@@ -64,6 +76,39 @@ public class PlayerDisconnectListener implements Listener {
             return Base64.getEncoder().encodeToString(baos.toByteArray());
         } catch (Exception e) {
             Bukkit.getLogger().severe("Erreur de sérialisation d'ItemStack: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Helper method to get cosmetic ID using reflection to avoid compilation issues
+     * @param player The player to get cosmetics for
+     * @param slotName The cosmetic slot name (HELMET, BACKPACK, OFFHAND, BALLOON)
+     * @return The cosmetic ID or null if not available
+     */
+    private String getCosmeticId(Player player, String slotName) {
+        try {
+            // Use reflection to access HMCCosmetics API safely
+            Class<?> apiClass = Class.forName("com.hibiscusmc.hmccosmetics.api.HMCCosmeticsAPI");
+            Class<?> userClass = Class.forName("com.hibiscusmc.hmccosmetics.user.CosmeticUser");
+            Class<?> slotClass = Class.forName("com.hibiscusmc.hmccosmetics.cosmetic.CosmeticSlot");
+            
+            // Get the user
+            Object user = apiClass.getMethod("getUser", java.util.UUID.class).invoke(null, player.getUniqueId());
+            if (user == null) return null;
+            
+            // Get the slot enum value
+            Object slot = Enum.valueOf((Class<Enum>) slotClass, slotName);
+            
+            // Get the cosmetic
+            Object cosmetic = userClass.getMethod("getCosmetic", slotClass).invoke(user, slot);
+            if (cosmetic == null) return null;
+            
+            // Get the ID
+            return (String) cosmetic.getClass().getMethod("getId").invoke(cosmetic);
+            
+        } catch (Exception e) {
+            // If reflection fails, return null (cosmetic data won't be saved)
             return null;
         }
     }

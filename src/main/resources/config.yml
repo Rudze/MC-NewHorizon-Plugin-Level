@@ -6,42 +6,60 @@ general:
 levels:
   initialExp: 100              # Expérience pour passer du niveau 1 au 2
   expIncrementPercent: 30      # Pourcentage d'augmentation par niveau
+  maxLevel: 100                # Niveau maximum atteignable
   fish_exp: 10                 # Exp gagné avec la pêche
-  breed_exp: 15
+  breed_exp: 15                # Exp gagné avec l'élevage
+  
+  # Notifications d'expérience
+  showExpGain: true            # Afficher les gains d'XP
+  useActionBarForExp: true     # Utiliser l'ActionBar pour les notifications XP
+  showMaxLevelMessage: true    # Afficher un message quand le joueur est au niveau max
+  
+  # Exigences de niveau pour les dimensions
+  dimensionRequirements:
+    nether: 20                 # Niveau requis pour accéder au Nether
+    end: 40                    # Niveau requis pour accéder à l'End
+  
+  # Multiplicateurs d'expérience
+  expMultipliers:
+    weekend: 1.5               # Multiplicateur le weekend
+    nightTime: 1.2             # Multiplicateur la nuit (18h-6h)
+    groupBonus: 1.1            # Bonus quand plusieurs joueurs sont proches
+  
   break_blocks:
-    - "*_LOG": 1
-    #Mineraits
-    - "COAL_ORE": 0
-    - "DEEPSLATE_COAL_ORE": 0
-    - "IRON_ORE": 0
-    - "DEEPSLATE_IRON_ORE": 0
-    - "COPPER_ORE": 0
-    - "DEEPSLATE_COPPER_ORE": 0
-    - "GOLD_ORE": 0
-    - "DEEPSLATE_GOLD_ORE": 0
-    - "REDSTONE_ORE": 0
-    - "DEEPSLATE_REDSTONE_ORE": 0
-    - "EMERALD_ORE": 0
-    - "DEEPSLATE_EMERALD_ORE": 0
-    - "LAPIS_ORE": 0
-    - "DEEPSLATE_LAPIS_ORE": 0
-    - "DIAMOND_ORE": 0
-    - "DEEPSLATE_DIAMOND_ORE": 0
-    - "NETHER_GOLD_ORE": 0
-    - "NETHER_QUARTZ_ORE": 0
-    - "ANCIENT_DEBRIS": 0
-    #Agricultures
-    - "WHEAT": 0
+    - "*_LOG": 2
+    #Minerais - Expérience basée sur la rareté
+    - "COAL_ORE": 3
+    - "DEEPSLATE_COAL_ORE": 4
+    - "IRON_ORE": 5
+    - "DEEPSLATE_IRON_ORE": 6
+    - "COPPER_ORE": 4
+    - "DEEPSLATE_COPPER_ORE": 5
+    - "GOLD_ORE": 8
+    - "DEEPSLATE_GOLD_ORE": 10
+    - "REDSTONE_ORE": 6
+    - "DEEPSLATE_REDSTONE_ORE": 7
+    - "EMERALD_ORE": 15
+    - "DEEPSLATE_EMERALD_ORE": 18
+    - "LAPIS_ORE": 7
+    - "DEEPSLATE_LAPIS_ORE": 8
+    - "DIAMOND_ORE": 20
+    - "DEEPSLATE_DIAMOND_ORE": 25
+    - "NETHER_GOLD_ORE": 12
+    - "NETHER_QUARTZ_ORE": 8
+    - "ANCIENT_DEBRIS": 50
+    #Agriculture - Expérience pour les cultures matures
+    - "WHEAT": 3
       "age": 7
-    - "CARROTS": 0
+    - "CARROTS": 3
       "age": 7
-    - "POTATOES": 0
+    - "POTATOES": 3
       "age": 7
-    - "BEETROOTS": 0
+    - "BEETROOTS": 2
       "age": 3
-    - "PUMPKIN": 0
-    - "MELON": 0
-    - "SUGAR_CANE": 0
+    - "PUMPKIN": 5
+    - "MELON": 4
+    - "SUGAR_CANE": 2
 
   # Expérience pour tuer des mobs
   mob_kill_exp:
@@ -49,7 +67,122 @@ levels:
     - "skeleton": 15
     - "creeper": 25
     - "enderman": 50
+    - "wither_skeleton": 75
+    - "blaze": 30
+    - "ghast": 40
 
 # Display formats showing player levels
 tablist-format: "&f[lvl %level_level_{name}%] &7{name}"
 nametag-format: "&f[lvl %level_level_{name}%] &7{name}"
+
+# ========================================
+# CONFIGURATION DE DEBUG ET DIAGNOSTIC
+# ========================================
+debug:
+  # Active le mode debug avec logging verbeux
+  enabled: false
+  
+  # Affiche des informations détaillées au démarrage
+  startup_diagnostics: true
+  
+  # Log toutes les actions des joueurs (XP, niveaux, etc.)
+  player_actions: false
+  
+  # Log les interactions avec la base de données
+  database_queries: false
+  
+  # Log les erreurs de configuration en détail
+  config_validation: true
+
+# ========================================
+# MESSAGES PERSONNALISABLES
+# ========================================
+messages:
+  # Messages de niveau
+  max_level_reached: "&eVous êtes au niveau maximum !"
+  level_up: "&aFélicitations ! Vous êtes passé niveau &e{level}"
+  
+  # Messages d'accès aux dimensions
+  nether_access_denied: "&cVous devez être niveau {required_level} pour accéder au Nether."
+  end_access_denied: "&cVous devez être niveau {required_level} pour accéder à l'End."
+  
+  # Formats de notification d'expérience
+  exp_gain_actionbar: "&a+{exp} XP{bonus} &7| &bNiveau {level}"
+  exp_gain_chat: "&a+{exp} XP{bonus}"
+  exp_bonus_format: " &e(x{multiplier})"
+
+# ========================================
+# CONFIGURATION DES SONS
+# ========================================
+sounds:
+  level_up:
+    sound: "minecraft:entity.player.levelup"
+    volume: 1.0
+    pitch: 1.0
+
+# ========================================
+# CONFIGURATION DES MULTIPLICATEURS AVANCÉS
+# ========================================
+advanced_multipliers:
+  # Distance pour le bonus de groupe (en blocs)
+  group_bonus_distance: 10
+  
+  # Heures de nuit pour le bonus nocturne (en ticks Minecraft)
+  night_time:
+    start: 12000  # 18h00
+    end: 6000     # 06h00
+
+# ========================================
+# CONFIGURATION DE LA BOSSBAR
+# ========================================
+bossbar:
+  enabled: true
+  color: "BLUE"  # BLUE, GREEN, PINK, PURPLE, RED, WHITE, YELLOW
+  style: "SOLID" # SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+  update_interval: 20  # En ticks (20 = 1 seconde)
+  
+  # Format du titre de la bossbar
+  title_format: "&f\uE1BB {territory}        &f\uE1BA {time}"
+  
+  # Noms des territoires personnalisables
+  territories:
+    world_newhorizon: "Nature"
+    world_resource: "Ressource"
+    world_resource_nether: "Nether"
+    world_resource_the_end: "The End"
+    no_region: "Aucune région"
+    
+  # Noms des régions WorldGuard personnalisables
+  regions:
+    musee: "Musée"
+    ile_de_newhorizon: "Île de NewHorizon"
+  
+  # Format de l'heure
+  time_format: "%02dh%02d"
+
+# ========================================
+# CONFIGURATION DE LA TABLIST
+# ========================================
+tablist:
+  enabled: true
+  update_interval: 40  # En ticks (40 = 2 secondes)
+  
+  # En-tête et pied de page personnalisables
+  header: "\n\n\n§7      §f\uE0D0      §r\n\n\n\n\n§7      §fSoutenez-nous avec le §b/boutique §f!      §r\n"
+  footer: "\n§7      §7/site | /discord | /boutique      §r\n "
+
+# ========================================
+# CONFIGURATION DES COMMANDES DE NIVEAU
+# ========================================
+level_commands:
+  # Commandes exécutées lors d'un level up
+  # {player} = nom du joueur, {level} = nouveau niveau
+  on_level_up:
+    - "lp user {player} permission set lvl.{level}"
+    # Vous pouvez ajouter d'autres commandes ici
+    # - "give {player} diamond 1"
+    # - "broadcast {player} a atteint le niveau {level} !"
+
+# ========================================
+# CONFIGURATION GÉNÉRALE
+# ========================================

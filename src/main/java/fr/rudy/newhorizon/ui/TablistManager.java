@@ -25,6 +25,8 @@ public class TablistManager {
     }
 
     public void start() {
+        long updateInterval = plugin.getConfig().getLong("tablist.update_interval", 40L);
+        
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -32,15 +34,18 @@ public class TablistManager {
                     updateTab(player);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 40L);
+        }.runTaskTimer(plugin, 0L, updateInterval);
     }
 
     public void updateTab(Player player) {
-        // Header & footer
-        String header = "\n\n\n§7      §f\uE0D0      §r\n\n\n\n\n§7      §fSoutenez-nous avec le §b/boutique §f!      §r\n";
-        String footer = "\n§7      §7/site | /discord | /boutique      §r\n ";
+        // Get configurable header & footer
+        String header = plugin.getConfig().getString("tablist.header", "\n\n\n§7      §f\uE0D0      §r\n\n\n\n\n§7      §fSoutenez-nous avec le §b/boutique §f!      §r\n");
+        String footer = plugin.getConfig().getString("tablist.footer", "\n§7      §7/site | /discord | /boutique      §r\n ");
 
-        player.setPlayerListHeaderFooter(header, footer);
+        // Only set header/footer if tablist is enabled
+        if (plugin.getConfig().getBoolean("tablist.enabled", true)) {
+            player.setPlayerListHeaderFooter(header, footer);
+        }
 
         // Get player group from LuckPerms
         CachedMetaData meta = luckPerms.getPlayerAdapter(Player.class).getMetaData(player);

@@ -52,7 +52,7 @@ public class PlayerListener implements Listener {
             }
             
             if (metadataMatch) {
-                levelsManager.setExp(event.getPlayer().getUniqueId(), levelsManager.getExp(event.getPlayer().getUniqueId()) + block.get(name));
+                levelsManager.addExp(event.getPlayer().getUniqueId(), block.get(name));
                 break; // Exit the loop once we've found a matching block and awarded experience
             }
         }
@@ -63,12 +63,21 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         World.Environment destination = event.getTo().getWorld().getEnvironment();
 
-        if (destination == World.Environment.NETHER && !player.hasPermission("lvl.20")) {
+        int netherLevelRequired = Main.get().getConfig().getInt("levels.dimensionRequirements.nether", 20);
+        int endLevelRequired = Main.get().getConfig().getInt("levels.dimensionRequirements.end", 40);
+        
+        int playerLevel = levelsManager.getLevel(player.getUniqueId());
+
+        if (destination == World.Environment.NETHER && playerLevel < netherLevelRequired) {
             event.setCancelled(true);
-            player.sendMessage(Main.get().getPrefixError() + "Vous devez être niveau 20 §cpour accéder au Nether.");
-        } else if (destination == World.Environment.THE_END && !player.hasPermission("lvl.40")) {
+            String message = Main.get().getConfig().getString("messages.nether_access_denied", "&cVous devez être niveau {required_level} pour accéder au Nether.");
+            message = message.replace("{required_level}", String.valueOf(netherLevelRequired));
+            player.sendMessage(Main.get().getPrefixError() + message);
+        } else if (destination == World.Environment.THE_END && playerLevel < endLevelRequired) {
             event.setCancelled(true);
-            player.sendMessage(Main.get().getPrefixError() + "Vous devez être niveau 40 pour accéder à l'End.");
+            String message = Main.get().getConfig().getString("messages.end_access_denied", "&cVous devez être niveau {required_level} pour accéder à l'End.");
+            message = message.replace("{required_level}", String.valueOf(endLevelRequired));
+            player.sendMessage(Main.get().getPrefixError() + message);
         }
     }
 

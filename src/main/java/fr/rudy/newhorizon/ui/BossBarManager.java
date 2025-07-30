@@ -1,12 +1,13 @@
 package fr.rudy.newhorizon.ui;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
+// WorldGuard imports removed due to Java version compatibility issues
+// import com.sk89q.worldedit.bukkit.BukkitAdapter;
+// import com.sk89q.worldedit.math.BlockVector3;
+// import com.sk89q.worldguard.WorldGuard;
+// import com.sk89q.worldguard.protection.ApplicableRegionSet;
+// import com.sk89q.worldguard.protection.managers.RegionManager;
+// import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+// import com.sk89q.worldguard.protection.regions.RegionContainer;
 import fr.rudy.newhorizon.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,8 +41,27 @@ public class BossBarManager implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        BossBar bar = Bukkit.createBossBar("", BarColor.BLUE, BarStyle.SOLID);
-        bar.setVisible(true);
+        
+        // Get configurable color and style
+        String colorName = plugin.getConfig().getString("bossbar.color", "BLUE");
+        String styleName = plugin.getConfig().getString("bossbar.style", "SOLID");
+        
+        BarColor color;
+        try {
+            color = BarColor.valueOf(colorName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            color = BarColor.BLUE;
+        }
+        
+        BarStyle style;
+        try {
+            style = BarStyle.valueOf(styleName.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            style = BarStyle.SOLID;
+        }
+        
+        BossBar bar = Bukkit.createBossBar("", color, style);
+        bar.setVisible(plugin.getConfig().getBoolean("bossbar.enabled", true));
         bar.addPlayer(player);
         bossBars.put(player.getUniqueId(), bar);
     }
@@ -56,6 +76,8 @@ public class BossBarManager implements Listener {
     }
 
     private void startUpdater() {
+        long updateInterval = plugin.getConfig().getLong("bossbar.update_interval", 20L);
+        
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -65,51 +87,94 @@ public class BossBarManager implements Listener {
 
                     String territory = getTerritoryLabel(player);
                     String time = getFormattedTime(player.getWorld().getTime());
-                    bar.setTitle("§f\uE1BB " + territory + "        §f\uE1BA " + time);
+                    
+                    String titleFormat = plugin.getConfig().getString("bossbar.title_format", "&f\uE1BB {territory}        &f\uE1BA {time}");
+                    String title = titleFormat
+                        .replace("{territory}", territory)
+                        .replace("{time}", time);
+                    
+                    bar.setTitle(title);
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(plugin, 0L, updateInterval);
     }
 
     private String getTerritoryLabel(Player player) {
         Location loc = player.getLocation();
         String worldName = loc.getWorld().getName().toLowerCase();
 
-        switch (worldName) {
-            case "world_newhorizon" -> {
-                return "Nature";
-            }
-            case "world_resource" -> {
-                return "Ressource";
-            }
-            case "world_resource_nether" -> {
-                return "Nether";
-            }
-            case "world_resource_the_end" -> {
-                return "The End";
+        // Check for configurable world territories
+        String territoryKey = "bossbar.territories." + worldName;
+        String territory = plugin.getConfig().getString(territoryKey);
+        if (territory != null) {
+            return territory;
+        }
+
+        // Check WorldGuard regions - using reflection for compatibility
+        if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null) {
+            try {
+                String regionId = getWorldGuardRegion(loc);
+                if (regionId != null) {
+                    String regionKey = "bossbar.regions." + regionId.toLowerCase();
+                    String regionName = plugin.getConfig().getString(regionKey);
+                    if (regionName != null) {
+                        return regionName;
+                    }
+                    // Return the region ID if no custom name is configured
+                    return regionId;
+                }
+            } catch (Exception e) {
+                // WorldGuard lookup failed, continue with fallback
             }
         }
 
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionManager manager = container.get(BukkitAdapter.adapt(loc.getWorld()));
-        if (manager != null) {
-            ApplicableRegionSet set = manager.getApplicableRegions(BukkitAdapter.asBlockVector(loc));
-            for (ProtectedRegion region : set) {
-                String id = region.getId().toLowerCase();
-                return switch (id) {
-                    case "musee" -> "Musée";
-                    case "ile_de_newhorizon" -> "Île de NewHorizon";
-                    default -> id;
-                };
-            }
-        }
-
-        return "Aucune région";
+        return plugin.getConfig().getString("bossbar.territories.no_region", "Aucune région");
     }
 
     private String getFormattedTime(long ticks) {
         int hours = (int) ((ticks / 1000L + 6L) % 24L);
         int minutes = (int) ((60.0 * (ticks % 1000L)) / 1000.0);
-        return String.format("%02dh%02d", hours, minutes);
+        String timeFormat = plugin.getConfig().getString("bossbar.time_format", "%02dh%02d");
+        return String.format(timeFormat, hours, minutes);
+    }
+
+    /**
+     * Helper method to get WorldGuard region using reflection to avoid compilation issues
+     * @param location The location to check for regions
+     * @return The region ID or null if not found
+     */
+    private String getWorldGuardRegion(Location location) {
+        try {
+            // Use reflection to access WorldGuard API safely
+            Class<?> worldGuardClass = Class.forName("com.sk89q.worldguard.WorldGuard");
+            Class<?> bukkitAdapterClass = Class.forName("com.sk89q.worldedit.bukkit.BukkitAdapter");
+            
+            // Get WorldGuard instance
+            Object worldGuard = worldGuardClass.getMethod("getInstance").invoke(null);
+            Object platform = worldGuard.getClass().getMethod("getPlatform").invoke(worldGuard);
+            Object regionContainer = platform.getClass().getMethod("getRegionContainer").invoke(platform);
+            
+            // Adapt world
+            Object adaptedWorld = bukkitAdapterClass.getMethod("adapt", org.bukkit.World.class).invoke(null, location.getWorld());
+            Object regionManager = regionContainer.getClass().getMethod("get", Class.forName("com.sk89q.worldedit.world.World")).invoke(regionContainer, adaptedWorld);
+            
+            if (regionManager != null) {
+                // Adapt location
+                Object blockVector = bukkitAdapterClass.getMethod("asBlockVector", Location.class).invoke(null, location);
+                Object regionSet = regionManager.getClass().getMethod("getApplicableRegions", Class.forName("com.sk89q.worldedit.math.BlockVector3")).invoke(regionManager, blockVector);
+                
+                // Get first region
+                Object iterator = regionSet.getClass().getMethod("iterator").invoke(regionSet);
+                if ((Boolean) iterator.getClass().getMethod("hasNext").invoke(iterator)) {
+                    Object region = iterator.getClass().getMethod("next").invoke(iterator);
+                    return (String) region.getClass().getMethod("getId").invoke(region);
+                }
+            }
+            
+            return null;
+        } catch (Exception e) {
+            // If reflection fails, return null
+            return null;
+        }
     }
 }
