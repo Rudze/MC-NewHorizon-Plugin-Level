@@ -1,0 +1,21 @@
+name: LEVEL
+version: 'v1.13'
+main: fr.rudy.newhorizon.Main
+api-version: '1.21'
+prefix: LEVEL
+authors: [Rudy, Shirito]
+
+depend: [ProtocolLib, DatabaseAPI]
+softdepend: ["PlaceholderAPI"]
+
+loadbefore:
+  - ShopkeepersAddon
+
+commands:
+  level:
+    description: Affiche votre niveau et votre expérience.
+    usage: /level
+
+  stats:
+    description: Ouvre le menu de statistiques de session
+    usage: /stats [reset] [joueur]

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.rudy.newhorizon</groupId>
+    <artifactId>LEVEL</artifactId>
+    <version>1.13</version>
+    <packaging>jar</packaging>
+
+    <name>LEVEL</name>
+
+    <properties>
+        <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <repository>
+            <id>nexus</id>
+            <name>Lumine Releases</name>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>matteodev</id>
+            <url>https://maven.devs.beer/</url>
+        </repository>
+        <repository>
+            <id>enginehub</id>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
+        <repository>
+            <id>aestrus-releases</id>
+            <name>Aestrus's Repository</name>
+            <url>https://maven.aestrus.io/releases</url>
+        </repository>
+        <repository>
+            <id>hmc-repo-releases</id>
+            <name>HibiscusMC Repository</name>
+            <url>https://repo.hibiscusmc.com/releases</url>
+        </repository>
+        <repository>
+            <id>dev.triumphteam</id>
+            <name>Triumph GUI</name>
+            <url>https://repo.triumphteam.dev/snapshots</url>
+        </repository>
+        <repository>
+            <id>com.ticxo.playeranimator</id>
+            <name>PlayerAnimator</name>
+            <url>https://mvn.lumine.io/repository/maven/</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/repository/public/</url>
+        </repository>
+    </repositories>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.11.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-Dist</artifactId>
+            <version>5.6.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.lone</groupId>
+            <artifactId>api-itemsadder</artifactId>
+            <version>4.0.10</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- WorldEdit -->
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>7.2.16</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- WorldGuard -->
+        <dependency>
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.13</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- MythicDungeons -->
+        <dependency>
+            <groupId>net.playavalon</groupId>
+            <artifactId>MythicDungeons</artifactId>
+            <version>1.3.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- HMCCosmetics -->
+        <dependency>
+            <groupId>com.hibiscusmc</groupId>
+            <artifactId>HMCCosmetics</artifactId>
+            <version>2.7.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.triumphteam</groupId>
+            <artifactId>triumph-gui</artifactId>
+            <version>3.2.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ticxo.playeranimator</groupId>
+            <artifactId>PlayerAnimator</artifactId>
+            <version>R1.2.7</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.8.0</version>
+        </dependency>
+
+
+    </dependencies>
+</project>

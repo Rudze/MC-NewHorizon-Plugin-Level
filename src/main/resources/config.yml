@@ -1,0 +1,57 @@
+general:
+  prefix: "&bLEVEL: "
+  prefixError: "&f&c "
+  prefixInfo: "&f&b "
+  
+levels:
+  initialExp: 100              # Expérience pour passer du niveau 1 au 2
+  expIncrementPercent: 30      # Pourcentage d'augmentation par niveau
+  fish_exp: 10                 # Exp gagné avec la pêche
+  breed_exp: 15
+  break_blocks:
+    - "*_LOG": 1
+    #Mineraits
+    - "COAL_ORE": 1
+    - "DEEPSLATE_COAL_ORE": 1
+    - "IRON_ORE": 3
+    - "DEEPSLATE_IRON_ORE": 3
+    - "COPPER_ORE": 1
+    - "DEEPSLATE_COPPER_ORE": 1
+    - "GOLD_ORE": 7
+    - "DEEPSLATE_GOLD_ORE": 7
+    - "REDSTONE_ORE": 2
+    - "DEEPSLATE_REDSTONE_ORE": 2
+    - "EMERALD_ORE": 15
+    - "DEEPSLATE_EMERALD_ORE": 10
+    - "LAPIS_ORE": 3
+    - "DEEPSLATE_LAPIS_ORE": 3
+    - "DIAMOND_ORE": 30
+    - "DEEPSLATE_DIAMOND_ORE": 20
+    - "NETHER_GOLD_ORE": 2
+    - "NETHER_QUARTZ_ORE": 1
+    - "ANCIENT_DEBRIS": 40
+    - "LAPIS_ORE": 2
+    - "DEEPSLATE_LAPIS_ORE": 2
+    #Agricultures
+    - "WHEAT": 2
+      age: 7
+    - "CARROTS": 2
+      age: 7
+    - "POTATOES": 2
+      age: 7
+    - "BEETROOTS": 2
+      age: 3
+    - "PUMPKIN": 2
+    - "MELON": 2
+    - "SUGAR_CANE": 1
+
+  # Expérience pour tuer des mobs
+  mob_kill_exp:
+    - "zombie": 20
+    - "skeleton": 15
+    - "creeper": 25
+    - "enderman": 50
+
+# Display formats showing player levels
+tablist-format: "&f[lvl %level_level_{name}%] &7{name}"
+nametag-format: "&f[lvl %level_level_{name}%] &7{name}"
